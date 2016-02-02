@@ -1,31 +1,86 @@
 package com.example.strauss.androthello;
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.ImageButton;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    TableLayout table;
+    private static final int TABLE_WIDTH = 8;
+    private static final int TABLE_HEIGHT = 8;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        /*
+        table = (TableLayout) findViewById(R.id.grille_main);
+        table.setBackground(ContextCompat.getDrawable(this,R.drawable.velvet_green_background));
+        for (int y = 0; y < TABLE_HEIGHT; y++) {
+            final int row = y;
+            TableRow r = new TableRow(this);
+            table.addView(r);
+            for (int x = 0; x < TABLE_WIDTH; x++) {
+                final int col = x;
+                Button b = new Button(this);
+                b.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(),
+                                "You clicked (" + row + "," + col + ")",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+                r.addView(b);
             }
-        });
+        }*/
+
+        final Board board = new Board();
+
+        table = (TableLayout) findViewById(R.id.grille_main);
+        table.setBackground(ContextCompat.getDrawable(this,R.drawable.velvet_green_background));
+        for (int y = 0; y < TABLE_HEIGHT; y++) {
+            final int row = y;
+            TableRow r = new TableRow(this);
+            table.addView(r);
+            for (int x = 0; x < TABLE_WIDTH; x++) {
+                final int col = x ;
+                board.pawn_matrix[y][x] = new Pawn(this);
+                board.pawn_matrix[y][x].getButton().getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+                board.pawn_matrix[y][x].getButton().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(),
+                                "You clicked (" + row + "," + col + ")",
+                                Toast.LENGTH_SHORT).show();
+                        board.pawn_matrix[row][col].flip();
+
+                    }
+                });
+                r.addView(board.pawn_matrix[y][x].getButton());
+            }
+        }
+
+
+
+
     }
 
     @Override

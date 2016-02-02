@@ -22,6 +22,8 @@
             android:name=".PlayActivity"
             android:label="@string/title_activity_play"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+
     </application>
 
 </manifest>
