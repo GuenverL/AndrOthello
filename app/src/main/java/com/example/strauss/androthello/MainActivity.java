@@ -62,7 +62,13 @@ public class MainActivity extends AppCompatActivity {
             table.addView(r);
             for (int x = 0; x < TABLE_WIDTH; x++) {
                 final int col = x ;
-                board.pawn_matrix[y][x] = new Pawn(this);
+                if((x == 3 && y == 3) || (x == 4 && y == 4))
+                    board.pawn_matrix[y][x] = new Pawn(this,'w');
+                else if((x == 4 && y == 3) || (x == 3 && y == 4))
+                    board.pawn_matrix[y][x] = new Pawn(this,'b');
+                else board.pawn_matrix[y][x] = new Pawn(this);
+
+
                 board.pawn_matrix[y][x].getButton().getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
                 board.pawn_matrix[y][x].getButton().setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -70,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),
                                 "You clicked (" + row + "," + col + ")",
                                 Toast.LENGTH_SHORT).show();
-                        board.pawn_matrix[row][col].flip();
+                        board.makeaMove(col,row);
 
                     }
                 });

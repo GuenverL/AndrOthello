@@ -1,6 +1,7 @@
 package com.example.strauss.androthello;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.widget.Button;
 
@@ -18,6 +19,23 @@ public class Pawn {
         button = new Button(context);
     }
 
+    public Pawn(Context context, char s){
+        state = s;
+        button = new Button(context);
+        if (state == 'w') {
+            button.setBackgroundColor(Color.WHITE);
+        } else if (state == 'b'){
+            button.setBackgroundColor(Color.BLACK);
+        }
+
+    }
+
+    public static char oppositeColor(char c){
+        if(c == 'b') return 'w';
+        else if(c == 'w') return 'b';
+        else return 'e';
+    }
+
     // methods
     public void setState(char c) {
         state = c;
@@ -25,13 +43,25 @@ public class Pawn {
 
     public char getState(){return state;};
 
-    public void flip(){
+    public void flip(char player){
         if (state == 'b') {
-           button.getBackground().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.OVERLAY);
+            button.setBackgroundColor(Color.WHITE);
             state = 'w';
-        } else {button.getBackground().setColorFilter(0x00000000, PorterDuff.Mode.OVERLAY); state = 'b';
+        } else if(state == 'w'){
+            button.setBackgroundColor(Color.BLACK);
+            state = 'b';
+        }
+        else{
+            state = oppositeColor(player);
+            if (state == 'w') {
+                button.setBackgroundColor(Color.WHITE);
+            } else if(state == 'b'){
+                button.setBackgroundColor(Color.BLACK);
+            }
         }
     }
+
+
 
     public Button getButton(){
         return button;
