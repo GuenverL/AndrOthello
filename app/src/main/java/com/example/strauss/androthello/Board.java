@@ -8,22 +8,30 @@ import android.widget.Button;
  */
 public class Board {
 
-    public Pawn[][] pawn_matrix;
-
-    private char activePlayer;
+    public Cell[][] cell_matrix;
 
     //constructor
-    public Board() {
-        pawn_matrix = new Pawn[8][8];
-        activePlayer = 'b';
+    public Board(){
+        cell_matrix = new Cell[8][8];
     }
 
-    public void makeaMove(int x,int y){
-        pawn_matrix[y][x].flip(activePlayer);
-        activePlayer = Pawn.oppositeColor(activePlayer);
+    public void boardInitialize(){
+        int cX;
+        int cY;
+
+        for(cX = 0; cX < 8; cX++){
+            for(cY = 0; cY < 8; cY++){
+                this.setCell(new Cell(cX, cY), cX, cY);
+            }
+        }
+        cell_matrix[4][4].white();
+        cell_matrix[5][5].white();
+        cell_matrix[4][5].black();
+        cell_matrix[5][4].black();
     }
 
-    public char getActivePlayer() {
-        return activePlayer;
+    public void setCell(Cell cell, int x, int y){
+        cell_matrix[x][y] = cell;
     }
+
 }
