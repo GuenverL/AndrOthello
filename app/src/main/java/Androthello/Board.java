@@ -1,7 +1,4 @@
-package com.example.strauss.androthello;
-
-import android.content.Context;
-import android.widget.Button;
+package Androthello;
 
 /**
  * Created by sunwel on 02/02/2016.
