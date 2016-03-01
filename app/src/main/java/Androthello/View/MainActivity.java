@@ -1,14 +1,20 @@
-package Androthello;
+package androthello.view;
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.Toast;
 
 import com.example.strauss.androthello.R;
+
+import androthello.model.Board;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -29,25 +35,32 @@ public class MainActivity extends AppCompatActivity {
 
 
         table = (TableLayout) findViewById(R.id.grille_main);
-        table.setBackground(ContextCompat.getDrawable(this, R.drawable.velvet_green_background));
+        table.setBackground(ContextCompat.getDrawable(this,R.drawable.velvet_green_background));
         for (int y = 0; y < TABLE_HEIGHT; y++) {
             final int row = y;
             TableRow r = new TableRow(this);
             table.addView(r);
             for (int x = 0; x < TABLE_WIDTH; x++) {
-                final int col = x ;
-
+                final int col = x;
+                Button b = new Button(this);
+                b.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(),
+                                "You clicked (" + row + "," + col + ")",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+                r.addView(b);
             }
-
-
-
-
         }
 
 
 
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

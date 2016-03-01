@@ -1,4 +1,4 @@
-package Androthello;
+package androthello.model;
 
 /**
  * Created by sunwel on 02/02/2016.
