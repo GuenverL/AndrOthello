@@ -12,4 +12,40 @@
     tools:context="androthello.view.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <TableLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/grille_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:shrinkColumns="*"
+        android:stretchColumns="*"
+
+
+        tools:context="androthello.view.MainActivity"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/button_player_two"
+        android:layout_alignEnd="@+id/button_player_two"
+        android:layout_below="@+id/button_player_one">
+
+    </TableLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/player_one"
+        android:id="@+id/button_player_one"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/player_two"
+        android:id="@+id/button_player_two"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>
