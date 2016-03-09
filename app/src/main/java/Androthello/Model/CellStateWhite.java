@@ -12,15 +12,11 @@ public class CellStateWhite implements CellState{
 
     private CellStateWhite(){}
 
-    public CellState white(){
-        return this;
-    }
-
-    public CellState black(){
+    public CellState opponentColor(){
         return CellStateBlack.getInstance();
     }
 
-    public int color(){
-        return 1;
+    public boolean isEmpty() {
+        return false;
     }
 }

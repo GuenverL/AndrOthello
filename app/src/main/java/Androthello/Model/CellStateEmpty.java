@@ -20,7 +20,11 @@ public class CellStateEmpty  implements CellState{
         return CellStateBlack.getInstance();
     }
 
-    public int color(){
-        return 0;
+    public CellState opponentColor() {
+        return this;
+    }
+
+    public boolean isEmpty() {
+        return true;
     }
 }

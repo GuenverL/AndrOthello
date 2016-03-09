@@ -15,20 +15,20 @@ public class Board {
     public void boardInitialize(){
         for(int col = 0; col < 8; col++){
             for(int row = 0; row < 8; row++){
-                this.setCell(new Cell(col, row), col, row);
+                this.setCell(new Cell(row, col), row, col);
             }
         }
-        this.cell_matrix[4][4].white();
-        this.cell_matrix[5][5].white();
-        this.cell_matrix[4][5].black();
-        this.cell_matrix[5][4].black();
+        this.setCell(new Cell(3, 3, CellStateWhite.getInstance()), 3, 3);
+        this.setCell(new Cell(4, 4, CellStateWhite.getInstance()), 4, 4);
+        this.setCell(new Cell(3, 4, CellStateBlack.getInstance()), 3, 4);
+        this.setCell(new Cell(4, 3, CellStateBlack.getInstance()), 4, 3);
     }
 
-    public void setCell(Cell cell, int col, int row){
-        this.cell_matrix[col][row] = cell;
+    public void setCell(Cell cell, int row, int col){
+        this.cell_matrix[row][col] = cell;
     }
 
-    public Cell getCell(int col, int row) {
-        return this.cell_matrix[col][row];
+    public Cell getCell(int row, int col) {
+        return this.cell_matrix[row][col];
     }
 }

@@ -10,17 +10,19 @@ public class CellStateBlack  implements CellState{
         return CSBINSTANCE;
     }
 
-    private CellStateBlack(){}
-
-    public CellState white(){
-        return CellStateWhite.getInstance();
-    }
-
     public CellState black(){
         return this;
     }
 
+    public CellState opponentColor(){
+        return CellStateWhite.getInstance();
+    }
+
     public int color(){
         return 2;
+    }
+
+    public boolean isEmpty() {
+        return false;
     }
 }
