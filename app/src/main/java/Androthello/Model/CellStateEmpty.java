@@ -19,7 +19,8 @@ public class CellStateEmpty  implements CellState{
     public CellState black(){
         return CellStateBlack.getInstance();
     }
-    public int state(){
+
+    public int color(){
         return 0;
     }
 }

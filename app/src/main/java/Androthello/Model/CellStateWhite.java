@@ -19,7 +19,8 @@ public class CellStateWhite implements CellState{
     public CellState black(){
         return CellStateBlack.getInstance();
     }
-    public int state(){
-        return 2;
+
+    public int color(){
+        return 1;
     }
 }

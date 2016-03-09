@@ -4,29 +4,34 @@ package androthello.model;
  * Created by Strauss on 23/02/2016.
  */
 public class Cell {
-    private CellState state;
-    private int coordX;
-    private int coordY;
 
-    public Cell(int x, int y){
+    private CellState state;
+    private int col;
+    private int row;
+
+    public Cell(int col, int row){
         this.state = CellStateEmpty.getInstance();
-        this.coordX = x;
-        this.coordY = y;
+        this.col = col;
+        this.row = row;
     }
 
     public void white(){
-        this.state = state.white();
+        this.state = this.state.white();
     }
 
     public void black(){
-        this.state = state.black();
+        this.state = this.state.black();
     }
 
-    public int getCoordX() {
-        return coordX;
+    public int getCol() {
+        return this.col;
     }
 
-    public int getCoordY() {
-        return coordY;
+    public int getRow() {
+        return this.row;
+    }
+
+    public CellState getState() {
+        return this.state;
     }
 }

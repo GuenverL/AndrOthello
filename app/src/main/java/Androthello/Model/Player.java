@@ -5,5 +5,13 @@ package androthello.model;
  */
 public abstract class Player{
     protected int id;
-    protected int Color;
+    protected int color;
+
+    public int getId(){
+        return this.id;
+    }
+
+    public int getColor() {
+        return this.color;
+    }
 }

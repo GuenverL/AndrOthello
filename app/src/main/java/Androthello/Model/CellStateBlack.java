@@ -19,7 +19,8 @@ public class CellStateBlack  implements CellState{
     public CellState black(){
         return this;
     }
-    public int state(){
-        return 1;
+
+    public int color(){
+        return 2;
     }
 }
