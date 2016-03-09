@@ -29,6 +29,7 @@ import androthello.model.Motor;
 public class MainActivity extends AppCompatActivity {
 
     TableLayout table;
+    Motor motor;
     Button button_player_one;
     Button button_player_two;
     private static final int TABLE_WIDTH = 8;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        motor = new Motor(2);
 
 
 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                                 "You clicked (" + row + "," + col + ")",
                                 Toast.LENGTH_SHORT).show();
 
-                        Motor.MakeMove(col,row);
+                        motor.makeMove(row, col);
                         refresh_view();
                     }
                 });

@@ -7,6 +7,11 @@ public abstract class Player{
     protected int id;
     protected int color;
 
+    public Player(int id, int color) {
+        this.id = id;
+        this.color = color;
+    }
+
     public int getId(){
         return this.id;
     }
