@@ -5,9 +5,9 @@ package androthello.model;
  */
 public abstract class Player{
     protected int id;
-    protected int color;
+    protected CellState color;
 
-    public Player(int id, int color) {
+    public Player(int id, CellState color) {
         this.id = id;
         this.color = color;
     }
@@ -16,7 +16,7 @@ public abstract class Player{
         return this.id;
     }
 
-    public int getColor() {
-        return this.color;
+    public int getCount(Board board){
+        return board.getColorCount(color);
     }
 }

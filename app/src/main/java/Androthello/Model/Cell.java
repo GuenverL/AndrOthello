@@ -1,39 +1,39 @@
 package androthello.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by Strauss on 23/02/2016.
  */
 public class Cell {
-
+    private Board board;
     private CellState state;
     private int row;
     private int col;
 
-    public Cell(int row, int col){
-        this.state = CellStateEmpty.getInstance();
+    public Cell(Board board, int row, int col){
+        this.board = board;
         this.row = row;
         this.col = col;
+        this.state = CellStateEmpty.getInstance();
     }
 
-    public Cell(int row, int col, CellState state){
+    public Cell(Board board, int row, int col, CellState state){
+        this.board = board;
         this.row = row;
         this.col = col;
         this.state = state;
-    }
-
-    public int getRow() {
-        return this.row;
-    }
-
-    public int getCol() {
-        return this.col;
     }
 
     public CellState getState() {
         return this.state;
     }
 
-    public Cell neighbor(Board board,int direction){
+    public void move(CellState state){
+        this.state = state;
+    }
+
+    public Cell neighbor(int direction){
         switch(direction){
             case 1:
                 return board.getCell(row+1, col-1);
@@ -56,15 +56,51 @@ public class Cell {
         }
     }
 
-    public CellState neighborColor(Board board ,int direction){
-        return this.neighbor(board, direction).getState();
+    public CellState neighborColor(int direction){
+        if(this.neighbor(direction) != null)
+            return this.neighbor(direction).getState();
+        return CellStateEmpty.getInstance();
     }
 
     public boolean isEmpty(){
         return state.isEmpty();
     }
 
-    public void move(CellState state){
-        this.state = state;
+    public boolean isLegal(CellState color) {
+        return this.isEmpty() && this.capture(color);
+    }
+
+    public ArrayList<Integer> checkNeighbors(CellState color){
+        ArrayList<Integer> directions = new ArrayList<>();
+        for(int i = 1; i <= 9; i++){
+            if(this.neighborColor(i) == color.opponentColor()){
+                directions.add(i);
+            }
+        }
+        return directions;
+    }
+
+    public ArrayList<Cell> capturedCells(CellState color, int direction){
+        ArrayList<Cell> cells = new ArrayList<>();
+        Cell currentCell = this.neighbor(direction);
+        cells.add(currentCell);
+        while(currentCell.neighborColor(direction) == color.opponentColor()){
+            currentCell = currentCell.neighbor(direction);
+            cells.add(currentCell);
+        }
+        if(currentCell.neighborColor(direction) != color){
+            cells.clear();
+        }
+        return cells;
+    }
+
+    public boolean capture(CellState color) {
+        ArrayList<ArrayList<Cell>> cells = new ArrayList<>();
+        for (int i : this.checkNeighbors(color)) {
+            if(!this.capturedCells(color, i).isEmpty()) {
+                cells.add(this.capturedCells(color, i));
+            }
+        }
+        return !cells.isEmpty();
     }
 }

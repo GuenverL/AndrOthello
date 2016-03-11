@@ -10,16 +10,8 @@ public class CellStateBlack  implements CellState{
         return CSBINSTANCE;
     }
 
-    public CellState black(){
-        return this;
-    }
-
     public CellState opponentColor(){
         return CellStateWhite.getInstance();
-    }
-
-    public int color(){
-        return 2;
     }
 
     public boolean isEmpty() {

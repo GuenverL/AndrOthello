@@ -12,14 +12,6 @@ public class CellStateEmpty  implements CellState{
 
     private CellStateEmpty(){}
 
-    public CellState white(){
-        return CellStateWhite.getInstance();
-    }
-
-    public CellState black(){
-        return CellStateBlack.getInstance();
-    }
-
     public CellState opponentColor() {
         return this;
     }

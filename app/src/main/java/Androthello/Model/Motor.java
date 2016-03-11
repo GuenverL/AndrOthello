@@ -14,12 +14,12 @@ public class Motor {
         board.boardInitialize();
 
         players = new Player[2];
-        players[0] = new PlayerUser(0,1);
+        players[0] = new PlayerUser(1, CellStateWhite.getInstance());
 
         if(playerHumanNb == 1){
-            players[1] = new PlayerAI(1,2);
+            players[1] = new PlayerAI(2, CellStateBlack.getInstance());
         }else if(playerHumanNb == 2){
-            players[1] = new PlayerUser(1,2);
+            players[1] = new PlayerUser(2, CellStateBlack.getInstance());
         }
 
         activePlayer = players[0];
@@ -27,14 +27,15 @@ public class Motor {
     }
 
     public static void makeMove(int row, int col){
-        if( isLegalMove(row, col) ) {
+        if( board.getLegalCells(activePlayerColor).contains(board.getCell(row, col)) ) {
             board.getCell(row, col).move(activePlayerColor);
-            playerChange();
+            board.capture(row, col, activePlayerColor);
+            endTurn();
         }
     }
 
     public static int getPlayerCount(int playerID){
-        return 2;
+        return players[playerID-1].getCount(board);
     }
 
     public static int getActivePlayerID(){
@@ -45,79 +46,20 @@ public class Motor {
         return board.getCell(row, col).getState();
     }
 
+    private static void endTurn(){
+            playerChange();
+    }
+
+    private static boolean possibleMove(CellState color){
+        return !board.getLegalCells(color).isEmpty();
+    }
+
     private static void playerChange(){
-        if(activePlayer.getId() == 0){
+        if(activePlayer.getId() == 1){
             activePlayer = players[1];
         }else{
             activePlayer = players[0];
         }
         activePlayerColor = activePlayerColor.opponentColor();
-    }
-
-    private static boolean isLegalMove(int row, int col){
-        if(!board.getCell(row, col).isEmpty()){
-            return false;
-        }
-
-        return opNeighbor(row, col);
-    }
-
-    private static boolean opNeighbor(int row, int col){
-        if(row == 0){
-            if(col == 0){
-                return (board.getCell(row, col).neighborColor(board, 2) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 3) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 6) == activePlayerColor.opponentColor());
-            }else if(col == 7){
-                return (board.getCell(row, col).neighborColor(board, 1) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 2) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 4) == activePlayerColor.opponentColor());
-            }else{
-                return (board.getCell(row, col).neighborColor(board, 1) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 2) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 3) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 4) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 6) == activePlayerColor.opponentColor());
-            }
-        }else if(row == 7){
-            if(col == 0){
-                return (board.getCell(row, col).neighborColor(board, 6) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 8) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 9) == activePlayerColor.opponentColor());
-            }else if(col == 7){
-                return (board.getCell(row, col).neighborColor(board, 4) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 7) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 8) == activePlayerColor.opponentColor());
-            }else{
-                return (board.getCell(row, col).neighborColor(board, 4) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 6) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 7) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 8) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 9) == activePlayerColor.opponentColor());
-            }
-        }else{
-            if(col == 0){
-                return (board.getCell(row, col).neighborColor(board, 2) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 3) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 6) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 8) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 9) == activePlayerColor.opponentColor());
-            }else if(col == 7){
-                return (board.getCell(row, col).neighborColor(board, 1) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 2) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 4) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 7) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 8) == activePlayerColor.opponentColor());
-            }else{
-                return (board.getCell(row, col).neighborColor(board, 1) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 2) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 3) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 4) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 6) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 7) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 8) == activePlayerColor.opponentColor() ||
-                        board.getCell(row, col).neighborColor(board, 9) == activePlayerColor.opponentColor());
-            }
-        }
     }
 }
