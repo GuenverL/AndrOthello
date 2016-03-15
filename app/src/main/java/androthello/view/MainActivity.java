@@ -45,20 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //Setting button
-        Button b_settings = (Button) (findViewById(R.id.button_settings ));
-        b_settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onOptionsButtonPressed();
-
-            }
-        });
-
-
-
-
-
         Board board = new Board(); //Main board which carry all the cell's states
 
 
@@ -71,13 +57,7 @@ public class MainActivity extends AppCompatActivity {
             for (int x = 0; x < TABLE_WIDTH; x++) {
                 final int col = x;
 
-                ImageButton b = new ImageButton(this){
-                    @Override
-                    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
-                        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-                        this.setMeasuredDimension(parentWidth, parentWidth);
-                    }
-                };
+                ImageButton b = new ImageButton(this);
                 b.setAdjustViewBounds(true);
                 b.setScaleType(ImageView.ScaleType.FIT_XY );
                 if((x == 3 && y == 3) || (x == 4 && y == 4))
@@ -109,12 +89,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refresh_view(){
-
-        /*if(Motor.isEndedGame()){
-            Toast.makeText(getApplicationContext(),
-                    "YOU WIN ! FLAWLESS VICTORY ",
-                    Toast.LENGTH_SHORT).show();
-        }*/
 
         //Refresh of the grid
         for (int y = 0; y < TABLE_HEIGHT; y++) {
@@ -177,11 +151,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onOptionsButtonPressed(){
-        Intent myIntent = new Intent(this, SettingsActivity.class);
-        startActivity(myIntent);
     }
 
 
