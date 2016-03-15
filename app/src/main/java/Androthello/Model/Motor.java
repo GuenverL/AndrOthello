@@ -1,5 +1,7 @@
 package androthello.model;
 
+import java.io.*;
+
 /**
  * Created by sunwel on 23/02/2016.
  */
@@ -8,10 +10,13 @@ public class Motor {
     private static Player[] players;
     private static Player activePlayer;
     private static CellState activePlayerColor;
+    private static boolean endedGame;
 
     public Motor(int playerHumanNb){
         board = new Board();
         board.boardInitialize();
+
+        endedGame = false;
 
         players = new Player[2];
         players[0] = new PlayerUser(1, CellStateWhite.getInstance());
@@ -23,7 +28,7 @@ public class Motor {
         }
 
         activePlayer = players[0];
-        activePlayerColor = CellStateWhite.getInstance();
+        activePlayerColor = CellStateBlack.getInstance();
     }
 
     public static void makeMove(int row, int col){
@@ -46,8 +51,13 @@ public class Motor {
         return board.getCell(row, col).getState();
     }
 
-    private static void endTurn(){
+    private static void endTurn() {
+        if (possibleMove(activePlayerColor)){
             playerChange();
+        }else{
+            endedGame = true;
+            resetGame();
+        }
     }
 
     private static boolean possibleMove(CellState color){
@@ -61,5 +71,57 @@ public class Motor {
             activePlayer = players[0];
         }
         activePlayerColor = activePlayerColor.opponentColor();
+    }
+
+    public static boolean isEndedGame() {
+        return endedGame;
+    }
+
+    public static void resetGame(){
+        board = new Board();
+        board.boardInitialize();
+    }
+
+    public static void saveGame() throws IOException {
+        String fileName = "save.txt";
+        PrintWriter writer = new PrintWriter(fileName);
+        String saveState = "";
+
+        BufferedWriter bufferedwriter = new BufferedWriter(writer);
+
+        if(activePlayerColor == CellStateWhite.getInstance()){
+            saveState += "1";
+        }else{
+            saveState += "0";
+        }
+
+        for(int row = 0; row < 8; row ++){
+            for(int col = 0; col < 8; col ++){
+                CellState state = board.getCell(row, col).getState();
+                if(state.equals(CellStateBlack.getInstance())) {
+                    saveState += "1";
+                }else if(state.equals(CellStateWhite.getInstance())) {
+                    saveState += "2";
+                }else if(state.equals(CellStateEmpty.getInstance())) {
+                    saveState += "0";
+                }
+            }
+        }
+
+        bufferedwriter.write(saveState);
+
+        bufferedwriter.close();
+    }
+
+    public static void loadGame() throws IOException {
+        String fileName = "save.txt";
+        String saveState = "";
+        try {
+            FileReader reader = new FileReader(fileName);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            saveState = bufferedReader.readLine();
+            bufferedReader.close();
+        }catch(FileNotFoundException exception){}
+        catch(IOException exception){}
     }
 }
