@@ -5,10 +5,9 @@ package androthello.model;
  */
 public abstract class Player{
     protected int id;
-    protected static CellState color;
-    protected static Board board;
+    protected CellState color;
 
-    public Player(int id, CellState color,Board board) {
+    public Player(int id, CellState color) {
         this.id = id;
         this.color = color;
     }
@@ -17,14 +16,7 @@ public abstract class Player{
         return this.id;
     }
 
-    public int getCount(){
+    public int getCount(Board board){
         return board.getColorCount(color);
-    }
-
-    public static void makeMove(Cell cell) {
-        if( board.getLegalCells(color).contains(cell) ) {
-            cell.move(color);
-            board.capture(cell, color);
-        }
     }
 }

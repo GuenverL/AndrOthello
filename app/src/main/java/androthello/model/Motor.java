@@ -11,21 +11,20 @@ public class Motor {
     private static Player activePlayer;
     private static CellState activePlayerColor;
     private static boolean endedGame;
-    private static int humanPlayersNb;
 
-    public Motor(int PlayersNb){
+    public Motor(int playerHumanNb){
         board = new Board();
         board.boardInitialize();
-        humanPlayersNb = PlayersNb;
+
         endedGame = false;
 
         players = new Player[2];
-        players[0] = new PlayerUser(1, CellStateWhite.getInstance(), board);
+        players[0] = new PlayerUser(1, CellStateWhite.getInstance());
 
-        if(humanPlayersNb == 1){
-            players[1] = new PlayerAI(2, CellStateBlack.getInstance(), board);
-        }else if(humanPlayersNb == 2){
-            players[1] = new PlayerUser(2, CellStateBlack.getInstance(), board);
+        if(playerHumanNb == 1){
+            players[1] = new PlayerAI(2, CellStateBlack.getInstance());
+        }else if(playerHumanNb == 2){
+            players[1] = new PlayerUser(2, CellStateBlack.getInstance());
         }
 
         activePlayer = players[0];
@@ -33,12 +32,15 @@ public class Motor {
     }
 
     public static void makeMove(int row, int col){
-        activePlayer.makeMove(board.getCell(row,col));
-        endTurn();
+        if( board.getLegalCells(activePlayerColor).contains(board.getCell(row, col)) ) {
+            board.getCell(row, col).move(activePlayerColor);
+            board.capture(row, col, activePlayerColor);
+            endTurn();
+        }
     }
 
     public static int getPlayerCount(int playerID){
-        return players[playerID-1].getCount();
+        return players[playerID-1].getCount(board);
     }
 
     public static int getActivePlayerID(){
@@ -55,9 +57,6 @@ public class Motor {
         }else{
             endedGame = true;
             resetGame();
-        }
-        if(humanPlayersNb == 1){
-            PlayerAI.makeMove();
         }
     }
 
@@ -122,6 +121,7 @@ public class Motor {
             BufferedReader bufferedReader = new BufferedReader(reader);
             saveState = bufferedReader.readLine();
             bufferedReader.close();
-        }catch(IOException exception){}
+        }catch(FileNotFoundException exception){}
+        catch(IOException exception){}
     }
 }

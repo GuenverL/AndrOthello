@@ -64,10 +64,10 @@ public class Board {
         return legalCells;
     }
 
-    public void capture(Cell cell, CellState color){
-        for(int direction: cell.checkNeighbors(color)) {
-            if(!cell.capturedCells(color, direction).isEmpty()){
-                for (Cell c : cell.capturedCells(color, direction)) {
+    public void capture(int row, int col, CellState color){
+        for(int direction: getCell(row, col).checkNeighbors(color)) {
+            if(!getCell(row, col).capturedCells(color, direction).isEmpty()){
+                for (Cell c : getCell(row, col).capturedCells(color, direction)) {
                     c.move(color);
                 }
             }
