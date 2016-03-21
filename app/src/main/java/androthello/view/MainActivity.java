@@ -1,5 +1,7 @@
 package androthello.view;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -17,6 +19,8 @@ import android.widget.TableRow;
 import android.widget.Toast;
 
 import com.example.strauss.androthello.R;
+
+import java.io.IOException;
 
 import androthello.model.Board;
 import androthello.model.CellState;
@@ -54,6 +58,46 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        Button b_newgame = (Button) (findViewById(R.id.button_newgame ));
+        b_newgame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                Motor.resetGame();
+                                refresh_view();
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
+            }
+        });
+
+        Button b_newgameAI = (Button) (findViewById(R.id.button_newgameAI ));
+        b_newgameAI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),
+                        " You launched a new IA game",
+                        Toast.LENGTH_SHORT).show();
+                refresh_view();
+            }
+
+        });
+
+
 
 
 
@@ -182,6 +226,35 @@ public class MainActivity extends AppCompatActivity {
     public void onOptionsButtonPressed(){
         Intent myIntent = new Intent(this, SettingsActivity.class);
         startActivity(myIntent);
+    }
+
+
+
+    public void onPause()
+    {
+        super.onPause();
+        try {
+            Motor.saveGame();
+            Toast.makeText(getApplicationContext(),
+                    "  saved game",
+                    Toast.LENGTH_SHORT).show();
+            refresh_view();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onResume(){
+        super.onResume();
+        try {
+            Motor.loadGame();
+            Toast.makeText(getApplicationContext(),
+                    "loaded game",
+                    Toast.LENGTH_SHORT).show();
+            refresh_view();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -54,7 +54,7 @@
         android:text="Nouvelle Partie"
         android:id="@+id/button_newgame"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/button_settings" />
+        android:layout_above="@+id/button_newgameAI" />
 
     <Button
         android:layout_width="wrap_content"
@@ -63,5 +63,16 @@
         android:id="@+id/button_settings"
         android:layout_centerHorizontal="true"
         android:layout_alignBottom="@+id/grille_main" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nouvelle partie IA"
+        android:id="@+id/button_newgameAI"
+        android:layout_alignParentTop="false"
+        android:layout_above="@+id/button_settings"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentLeft="false"/>
 
 </RelativeLayout>
