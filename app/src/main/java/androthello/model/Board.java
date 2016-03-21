@@ -17,17 +17,17 @@ public class Board {
     public void boardInitialize(){
         for(int col = 0; col < 8; col++){
             for(int row = 0; row < 8; row++){
-                this.setCell(new Cell(this, row, col), row, col);
+                this.cell_matrix[row][col] = new Cell(this, row, col);
             }
         }
-        this.setCell(new Cell(this, 3, 3, CellStateWhite.getInstance()), 3, 3);
-        this.setCell(new Cell(this, 4, 4, CellStateWhite.getInstance()), 4, 4);
-        this.setCell(new Cell(this, 3, 4, CellStateBlack.getInstance()), 3, 4);
-        this.setCell(new Cell(this, 4, 3, CellStateBlack.getInstance()), 4, 3);
+        this.setCell(CellStateWhite.getInstance(), 3, 3);
+        this.setCell(CellStateWhite.getInstance(), 4, 4);
+        this.setCell(CellStateBlack.getInstance(), 3, 4);
+        this.setCell(CellStateBlack.getInstance(), 4, 3);
     }
 
-    public void setCell(Cell cell, int row, int col){
-        this.cell_matrix[row][col] = cell;
+    public void setCell(CellState state, int row, int col){
+        this.cell_matrix[row][col].setState(state);
     }
 
     public Cell getCell(int row, int col) {
@@ -64,10 +64,11 @@ public class Board {
         return legalCells;
     }
 
-    public void capture(int row, int col, CellState color){
-        for(int direction: getCell(row, col).checkNeighbors(color)) {
-            if(!getCell(row, col).capturedCells(color, direction).isEmpty()){
-                for (Cell c : getCell(row, col).capturedCells(color, direction)) {
+    public void capture(Cell cell, CellState color){
+        cell.move(color);
+        for(int direction: cell.checkNeighbors(color)) {
+            if(!cell.capturedCells(color, direction).isEmpty()){
+                for (Cell c : cell.capturedCells(color, direction)) {
                     c.move(color);
                 }
             }

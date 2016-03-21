@@ -19,4 +19,8 @@ public class CellStateEmpty  implements CellState{
     public boolean isEmpty() {
         return true;
     }
+
+    public String toString(){
+        return "None";
+    }
 }

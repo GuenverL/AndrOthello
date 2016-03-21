@@ -17,4 +17,8 @@ public class CellStateBlack  implements CellState{
     public boolean isEmpty() {
         return false;
     }
+
+    public String toString(){
+        return "Black";
+    }
 }

@@ -103,4 +103,8 @@ public class Cell {
         }
         return !cells.isEmpty();
     }
+
+    public void setState(CellState state) {
+        this.state = state;
+    }
 }

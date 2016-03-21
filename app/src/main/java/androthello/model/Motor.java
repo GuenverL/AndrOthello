@@ -7,24 +7,25 @@ import java.io.*;
  */
 public class Motor {
     private static Board board;
-    private static Player[] players;
-    private static Player activePlayer;
+    private static PlayerUser[] players;
+    private static PlayerUser activePlayer;
     private static CellState activePlayerColor;
-    private static boolean endedGame;
+    private static CellState winner;
+    private static int humanPlayersNumber;
 
-    public Motor(int playerHumanNb){
+    public Motor(int humanNumber){
         board = new Board();
         board.boardInitialize();
+        humanPlayersNumber = humanNumber;
+        winner = CellStateEmpty.getInstance();
 
-        endedGame = false;
+        players = new PlayerUser[2];
+        players[0] = new PlayerUser(1, CellStateWhite.getInstance(), board);
 
-        players = new Player[2];
-        players[0] = new PlayerUser(1, CellStateWhite.getInstance());
-
-        if(playerHumanNb == 1){
-            players[1] = new PlayerAI(2, CellStateBlack.getInstance());
-        }else if(playerHumanNb == 2){
-            players[1] = new PlayerUser(2, CellStateBlack.getInstance());
+        if(humanPlayersNumber == 1){
+            players[1] = new PlayerAI(2, CellStateBlack.getInstance(), board);
+        }else if(humanPlayersNumber == 2){
+            players[1] = new PlayerUser(2, CellStateBlack.getInstance(), board);
         }
 
         activePlayer = players[0];
@@ -32,11 +33,8 @@ public class Motor {
     }
 
     public static void makeMove(int row, int col){
-        if( board.getLegalCells(activePlayerColor).contains(board.getCell(row, col)) ) {
-            board.getCell(row, col).move(activePlayerColor);
-            board.capture(row, col, activePlayerColor);
+        if(activePlayer.makeMove(board.getCell(row,col)) == 0 )
             endTurn();
-        }
     }
 
     public static int getPlayerCount(int playerID){
@@ -52,11 +50,16 @@ public class Motor {
     }
 
     private static void endTurn() {
-        if (possibleMove(activePlayerColor)){
+        if (possibleMove(activePlayerColor.opponentColor())){
             playerChange();
         }else{
-            endedGame = true;
+            if(!possibleMove(activePlayerColor))
+            winner = activePlayerColor;
             resetGame();
+        }
+        if(activePlayer.getId() == 2 && humanPlayersNumber == 1){
+            activePlayer.makeMove();
+            endTurn();
         }
     }
 
@@ -73,8 +76,8 @@ public class Motor {
         activePlayerColor = activePlayerColor.opponentColor();
     }
 
-    public static boolean isEndedGame() {
-        return endedGame;
+    public String isEndedGame() {
+        return winner.toString();
     }
 
     public static void resetGame(){
@@ -89,39 +92,67 @@ public class Motor {
 
         BufferedWriter bufferedwriter = new BufferedWriter(writer);
 
-        if(activePlayerColor == CellStateWhite.getInstance()){
-            saveState += "1";
-        }else{
+        if(activePlayerColor == CellStateBlack.getInstance()){
             saveState += "0";
+        }else{
+            saveState += "1";
         }
 
         for(int row = 0; row < 8; row ++){
             for(int col = 0; col < 8; col ++){
                 CellState state = board.getCell(row, col).getState();
-                if(state.equals(CellStateBlack.getInstance())) {
-                    saveState += "1";
+                if(state.equals(CellStateEmpty.getInstance())) {
+                    saveState += '0';
+                }else if(state.equals(CellStateBlack.getInstance())) {
+                    saveState += '1';
                 }else if(state.equals(CellStateWhite.getInstance())) {
-                    saveState += "2";
-                }else if(state.equals(CellStateEmpty.getInstance())) {
-                    saveState += "0";
+                    saveState += '2';
                 }
             }
         }
 
         bufferedwriter.write(saveState);
-
         bufferedwriter.close();
     }
 
-    public static void loadGame() throws IOException {
+    public static int loadGame() throws IOException {
         String fileName = "save.txt";
-        String saveState = "";
-        try {
+        String saveState ;
+
+        try{
             FileReader reader = new FileReader(fileName);
             BufferedReader bufferedReader = new BufferedReader(reader);
             saveState = bufferedReader.readLine();
+
+            if(saveState.charAt(0) == '0'){
+                activePlayerColor = CellStateBlack.getInstance();
+            }else{
+                activePlayerColor = CellStateWhite.getInstance();
+            }
+
+            int indice = 1;
+
+            for(int row = 0; row < 8; row ++){
+                for(int col = 0; col < 8; col ++){
+                    switch(saveState.charAt(indice)){
+                        case '0':
+                            board.setCell(CellStateEmpty.getInstance(),row , col);
+                            break;
+                        case '1':
+                            board.setCell(CellStateBlack.getInstance(),row , col);
+                            break;
+                        case '2':
+                            board.setCell(CellStateWhite.getInstance(),row , col);
+                            break;
+                    }
+                }
+            }
+
             bufferedReader.close();
-        }catch(FileNotFoundException exception){}
-        catch(IOException exception){}
+            return 0;
+
+        }catch(FileNotFoundException exception){
+            return 1;
+        }
     }
 }

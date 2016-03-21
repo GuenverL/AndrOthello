@@ -19,4 +19,8 @@ public class CellStateWhite implements CellState{
     public boolean isEmpty() {
         return false;
     }
+
+    public String toString(){
+        return "White";
+    }
 }

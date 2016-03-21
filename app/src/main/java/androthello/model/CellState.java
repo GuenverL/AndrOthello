@@ -6,4 +6,5 @@ package androthello.model;
 public interface CellState {
     CellState opponentColor();
     boolean isEmpty();
+    String toString();
 }
