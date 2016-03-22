@@ -15,8 +15,10 @@ public class PlayerAI extends PlayerUser {
     public void makeMove(){
         Random randomGenerator = new Random();
         ArrayList<Cell> legalList = board.getLegalCells(color);
-        int random = randomGenerator.nextInt(legalList.size());
-        board.capture(legalList.get(random), color);
+        if(legalList.size()>0){
+            int random = randomGenerator.nextInt(legalList.size());
+            board.capture(legalList.get(random), color);
+        }
     }
 
     @Override

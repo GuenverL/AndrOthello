@@ -54,8 +54,12 @@ public class Motor {
             playerChange();
         }else{
             if(!possibleMove(activePlayerColor))
-            winner = activePlayerColor;
-            resetGame();
+                winner = activePlayerColor;
+            if(humanPlayersNumber == 2){
+                resetGameUser();
+            }else{
+                resetGameAI();
+            }
         }
         if(activePlayer.getId() == 2 && humanPlayersNumber == 1){
             activePlayer.makeMove();
@@ -80,9 +84,18 @@ public class Motor {
         return winner.toString();
     }
 
-    public static void resetGame(){
-        board = new Board();
+    public static void resetGameUser(){
         board.boardInitialize();
+        activePlayer = players[0];
+        activePlayerColor = CellStateBlack.getInstance();
+        players[1] = new PlayerUser(1, CellStateWhite.getInstance(), board);
+    }
+
+    public static void resetGameAI(){
+        board.boardInitialize();
+        activePlayer = players[0];
+        activePlayerColor = CellStateBlack.getInstance();
+        players[1] = new PlayerAI(1, CellStateWhite.getInstance(), board);
     }
 
     public static void saveGame() throws IOException {
