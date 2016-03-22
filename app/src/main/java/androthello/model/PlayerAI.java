@@ -5,6 +5,7 @@ import java.util.Random;
 
 /**
  * Created by Strauss on 23/02/2016.
+ * The AI player
  */
 public class PlayerAI extends PlayerUser {
     public PlayerAI(int id, CellColor color, Board board) {
@@ -12,6 +13,9 @@ public class PlayerAI extends PlayerUser {
     }
 
     @Override
+    /**
+     * Make a move on a random legal cell
+     */
     public void makeMove(){
         Random randomGenerator = new Random();
         ArrayList<Cell> legalList = board.getLegalCells(color);

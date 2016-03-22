@@ -54,7 +54,7 @@ public class Motor {
      * @return int the score
      */
     public static int getPlayerCount(int playerID){
-        return players[playerID-1].getCount(board);
+        return players[playerID-1].getCount();
     }
 
     /**

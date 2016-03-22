@@ -83,20 +83,39 @@ public class Cell {
         }
     }
 
+    /**
+     * Getter on the color of the neighbor in a given direction
+     * @param direction the direction
+     * @return CellColor the color of the neighbor
+     */
     public CellColor neighborColor(int direction){
         if(this.neighbor(direction) != null)
             return this.neighbor(direction).getColor();
         return CellColorEmpty.getInstance();
     }
 
+    /**
+     * returns true if the cell is empty, else false
+     * @return boolean
+     */
     public boolean isEmpty(){
         return color.isEmpty();
     }
 
+    /**
+     * checks if a move on the cell is legal for a given color
+     * @param color the color who ants to make the move
+     * @return boolean true if the move is legal, else false
+     */
     public boolean isLegal(CellColor color) {
         return this.isEmpty() && this.capture(color);
     }
 
+    /**
+     * Checks the colors of the neighbors to determine the directions in which there is e opponent cell
+     * @param color the color of the playing player
+     * @return ArrayList the list on directions
+     */
     public ArrayList<Integer> checkNeighbors(CellColor color){
         ArrayList<Integer> directions = new ArrayList<>();
         for(int i = 1; i <= 9; i++){
@@ -107,6 +126,12 @@ public class Cell {
         return directions;
     }
 
+    /**
+     * Constructs a list of the cells captured by a move in a given direction by a given color
+     * @param color the color
+     * @param direction the direction
+     * @return ArrayList the list of cells captured
+     */
     public ArrayList<Cell> capturedCells(CellColor color, int direction){
         ArrayList<Cell> cells = new ArrayList<>();
         Cell currentCell = this.neighbor(direction);
@@ -121,6 +146,11 @@ public class Cell {
         return cells;
     }
 
+    /**
+     * checks if there is a capture cells on a move by a given color
+     * @param color the color of the player making the move
+     * @return boolean true if there is a capture, else false
+     */
     public boolean capture(CellColor color) {
         ArrayList<ArrayList<Cell>> cells = new ArrayList<>();
         for (int i : this.checkNeighbors(color)) {
@@ -131,7 +161,11 @@ public class Cell {
         return !cells.isEmpty();
     }
 
-    public void setState(CellColor state) {
-        this.color = state;
+    /**
+     * Setter on the color of the cell
+     * @param color the color to set
+     */
+    public void setState(CellColor color) {
+        this.color = color;
     }
 }
