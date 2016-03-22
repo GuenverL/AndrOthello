@@ -7,7 +7,7 @@ import java.util.Random;
  * Created by Strauss on 23/02/2016.
  */
 public class PlayerAI extends PlayerUser {
-    public PlayerAI(int id, CellState color, Board board) {
+    public PlayerAI(int id, CellColor color, Board board) {
         super(id, color, board);
     }
 

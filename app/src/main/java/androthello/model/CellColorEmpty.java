@@ -3,16 +3,16 @@ package androthello.model;
 /**
  * Created by Strauss on 23/02/2016.
  */
-public class CellStateEmpty  implements CellState{
-    private static CellStateEmpty CSEINSTANCE = new CellStateEmpty();
+public class CellColorEmpty implements CellColor {
+    private static CellColorEmpty CSEINSTANCE = new CellColorEmpty();
 
-    public static CellStateEmpty getInstance(){
+    public static CellColorEmpty getInstance(){
         return CSEINSTANCE;
     }
 
-    private CellStateEmpty(){}
+    private CellColorEmpty(){}
 
-    public CellState opponentColor() {
+    public CellColor opponentColor() {
         return this;
     }
 

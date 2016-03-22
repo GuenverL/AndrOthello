@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class Cell {
     private Board board;
-    private CellState state;
+    private CellColor color;
     private int row;
     private int col;
 
@@ -15,22 +15,22 @@ public class Cell {
         this.board = board;
         this.row = row;
         this.col = col;
-        this.state = CellStateEmpty.getInstance();
+        this.color = CellColorEmpty.getInstance();
     }
 
-    public Cell(Board board, int row, int col, CellState state){
+    public Cell(Board board, int row, int col, CellColor state){
         this.board = board;
         this.row = row;
         this.col = col;
-        this.state = state;
+        this.color = state;
     }
 
-    public CellState getState() {
-        return this.state;
+    public CellColor getColor() {
+        return this.color;
     }
 
-    public void move(CellState state){
-        this.state = state;
+    public void move(CellColor state){
+        this.color = state;
     }
 
     public Cell neighbor(int direction){
@@ -56,21 +56,21 @@ public class Cell {
         }
     }
 
-    public CellState neighborColor(int direction){
+    public CellColor neighborColor(int direction){
         if(this.neighbor(direction) != null)
-            return this.neighbor(direction).getState();
-        return CellStateEmpty.getInstance();
+            return this.neighbor(direction).getColor();
+        return CellColorEmpty.getInstance();
     }
 
     public boolean isEmpty(){
-        return state.isEmpty();
+        return color.isEmpty();
     }
 
-    public boolean isLegal(CellState color) {
+    public boolean isLegal(CellColor color) {
         return this.isEmpty() && this.capture(color);
     }
 
-    public ArrayList<Integer> checkNeighbors(CellState color){
+    public ArrayList<Integer> checkNeighbors(CellColor color){
         ArrayList<Integer> directions = new ArrayList<>();
         for(int i = 1; i <= 9; i++){
             if(this.neighborColor(i) == color.opponentColor()){
@@ -80,7 +80,7 @@ public class Cell {
         return directions;
     }
 
-    public ArrayList<Cell> capturedCells(CellState color, int direction){
+    public ArrayList<Cell> capturedCells(CellColor color, int direction){
         ArrayList<Cell> cells = new ArrayList<>();
         Cell currentCell = this.neighbor(direction);
         cells.add(currentCell);
@@ -94,7 +94,7 @@ public class Cell {
         return cells;
     }
 
-    public boolean capture(CellState color) {
+    public boolean capture(CellColor color) {
         ArrayList<ArrayList<Cell>> cells = new ArrayList<>();
         for (int i : this.checkNeighbors(color)) {
             if(!this.capturedCells(color, i).isEmpty()) {
@@ -104,7 +104,7 @@ public class Cell {
         return !cells.isEmpty();
     }
 
-    public void setState(CellState state) {
-        this.state = state;
+    public void setState(CellColor state) {
+        this.color = state;
     }
 }

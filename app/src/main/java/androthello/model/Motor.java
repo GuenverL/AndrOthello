@@ -9,30 +9,30 @@ public class Motor {
     private static Board board;
     private static PlayerUser[] players;
     private static PlayerUser activePlayer;
-    private static CellState activePlayerColor;
-    private static CellState winner;
+    private static CellColor activePlayerColor;
+    private static CellColor winner;
     private static int humanPlayersNumber;
 
     public Motor(int humanNumber){
         board = new Board();
         board.boardInitialize();
         humanPlayersNumber = humanNumber;
-        winner = CellStateEmpty.getInstance();
+        winner = CellColorEmpty.getInstance();
 
         players = new PlayerUser[2];
-        players[0] = new PlayerUser(1, CellStateBlack.getInstance(), board);
+        players[0] = new PlayerUser(1, CellColorBlack.getInstance(), board);
 
         if(humanPlayersNumber == 1){
-            players[1] = new PlayerAI(2, CellStateBlack.getInstance(), board);
+            players[1] = new PlayerAI(2, CellColorBlack.getInstance(), board);
         }else if(humanPlayersNumber == 2){
-            players[1] = new PlayerUser(2, CellStateWhite.getInstance(), board);
+            players[1] = new PlayerUser(2, CellColorWhite.getInstance(), board);
         }
 
         activePlayer = players[0];
-        activePlayerColor = CellStateBlack.getInstance();
+        activePlayerColor = CellColorBlack.getInstance();
     }
 
-    public static void makeMove(int row, int col){
+    public void makeMove(int row, int col){
         if(activePlayer.makeMove(board.getCell(row,col)) == 0 )
             endTurn();
     }
@@ -45,11 +45,11 @@ public class Motor {
         return activePlayer.getId();
     }
 
-    public static CellState GetCellState(int row, int col){
-        return board.getCell(row, col).getState();
+    public static CellColor getCellColor(int row, int col){
+        return board.getCell(row, col).getColor();
     }
 
-    private static void endTurn() {
+    private void endTurn() {
         if (possibleMove(activePlayerColor.opponentColor())){
             playerChange();
         }else{
@@ -67,7 +67,7 @@ public class Motor {
         }
     }
 
-    private static boolean possibleMove(CellState color){
+    private static boolean possibleMove(CellColor color){
         return !board.getLegalCells(color).isEmpty();
     }
 
@@ -84,23 +84,22 @@ public class Motor {
         return winner.toString();
     }
 
-    public static void resetGameUser(){
+    public void resetGameUser(){
         board.boardInitialize();
         activePlayer = players[0];
-        activePlayerColor = CellStateBlack.getInstance();
-        players[1] = new PlayerUser(2, CellStateWhite.getInstance(), board);
+        activePlayerColor = CellColorBlack.getInstance();
+        players[1] = new PlayerUser(2, CellColorWhite.getInstance(), board);
     }
 
-    public static void resetGameAI(){
-        board = new Board();
+    public void resetGameAI(){
         board.boardInitialize();
         activePlayer = players[0];
-        activePlayerColor = CellStateBlack.getInstance();
-        players[1] = new PlayerAI(2, CellStateWhite.getInstance(), board);
+        activePlayerColor = CellColorBlack.getInstance();
+        players[1] = new PlayerAI(2, CellColorWhite.getInstance(), board);
     }
 
     public static Boolean isEndedGame(){
-        return (winner != CellStateEmpty.getInstance());
+        return (winner != CellColorEmpty.getInstance());
     }
 
     public static void saveGame() throws IOException {
@@ -110,7 +109,7 @@ public class Motor {
 
         BufferedWriter bufferedwriter = new BufferedWriter(writer);
 
-        if(activePlayerColor == CellStateBlack.getInstance()){
+        if(activePlayerColor == CellColorBlack.getInstance()){
             saveState += "0";
         }else{
             saveState += "1";
@@ -118,12 +117,12 @@ public class Motor {
 
         for(int row = 0; row < 8; row ++){
             for(int col = 0; col < 8; col ++){
-                CellState state = board.getCell(row, col).getState();
-                if(state.equals(CellStateEmpty.getInstance())) {
+                CellColor state = board.getCell(row, col).getColor();
+                if(state.equals(CellColorEmpty.getInstance())) {
                     saveState += '0';
-                }else if(state.equals(CellStateBlack.getInstance())) {
+                }else if(state.equals(CellColorBlack.getInstance())) {
                     saveState += '1';
-                }else if(state.equals(CellStateWhite.getInstance())) {
+                }else if(state.equals(CellColorWhite.getInstance())) {
                     saveState += '2';
                 }
             }
@@ -143,9 +142,9 @@ public class Motor {
             saveState = bufferedReader.readLine();
 
             if(saveState.charAt(0) == '0'){
-                activePlayerColor = CellStateBlack.getInstance();
+                activePlayerColor = CellColorBlack.getInstance();
             }else{
-                activePlayerColor = CellStateWhite.getInstance();
+                activePlayerColor = CellColorWhite.getInstance();
             }
 
             int indice = 1;
@@ -154,13 +153,13 @@ public class Motor {
                 for(int col = 0; col < 8; col ++){
                     switch(saveState.charAt(indice)){
                         case '0':
-                            board.setCell(CellStateEmpty.getInstance(),row , col);
+                            board.setCell(CellColorEmpty.getInstance(),row , col);
                             break;
                         case '1':
-                            board.setCell(CellStateBlack.getInstance(),row , col);
+                            board.setCell(CellColorBlack.getInstance(),row , col);
                             break;
                         case '2':
-                            board.setCell(CellStateWhite.getInstance(),row , col);
+                            board.setCell(CellColorWhite.getInstance(),row , col);
                             break;
                     }
                 }

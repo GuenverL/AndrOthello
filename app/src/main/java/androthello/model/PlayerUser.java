@@ -1,17 +1,14 @@
 package androthello.model;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 /**
  * Created by Strauss on 23/02/2016.
  */
 public class PlayerUser {
     protected int id;
-    protected CellState color;
+    protected CellColor color;
     protected Board board;
 
-    public PlayerUser(int id, CellState color, Board board) {
+    public PlayerUser(int id, CellColor color, Board board) {
         this.id = id;
         this.color = color;
         this.board = board;

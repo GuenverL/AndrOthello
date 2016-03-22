@@ -20,13 +20,13 @@ public class Board {
                 this.cell_matrix[row][col] = new Cell(this, row, col);
             }
         }
-        this.setCell(CellStateWhite.getInstance(), 3, 3);
-        this.setCell(CellStateWhite.getInstance(), 4, 4);
-        this.setCell(CellStateBlack.getInstance(), 3, 4);
-        this.setCell(CellStateBlack.getInstance(), 4, 3);
+        this.setCell(CellColorWhite.getInstance(), 3, 3);
+        this.setCell(CellColorWhite.getInstance(), 4, 4);
+        this.setCell(CellColorBlack.getInstance(), 3, 4);
+        this.setCell(CellColorBlack.getInstance(), 4, 3);
     }
 
-    public void setCell(CellState state, int row, int col){
+    public void setCell(CellColor state, int row, int col){
         this.cell_matrix[row][col].setState(state);
     }
 
@@ -37,12 +37,12 @@ public class Board {
         return this.cell_matrix[row][col];
     }
 
-    public int getColorCount(CellState color){
+    public int getColorCount(CellColor color){
         int count = 0;
 
         for(int col = 0; col <= 7; col++){
             for(int row = 0; row <= 7; row++){
-                if(this.getCell(row, col).getState() == color){
+                if(this.getCell(row, col).getColor() == color){
                     count ++;
                 }
             }
@@ -50,7 +50,7 @@ public class Board {
         return count;
     }
 
-    public ArrayList<Cell> getLegalCells(CellState color) {
+    public ArrayList<Cell> getLegalCells(CellColor color) {
         ArrayList<Cell> legalCells = new ArrayList<>();
 
         for(int col = 0; col <= 7; col++){
@@ -64,7 +64,7 @@ public class Board {
         return legalCells;
     }
 
-    public void capture(Cell cell, CellState color){
+    public void capture(Cell cell, CellColor color){
         cell.move(color);
         for(int direction: cell.checkNeighbors(color)) {
             if(!cell.capturedCells(color, direction).isEmpty()){

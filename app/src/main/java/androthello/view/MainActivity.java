@@ -3,21 +3,15 @@ package androthello.view;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
@@ -26,11 +20,10 @@ import com.example.strauss.androthello.R;
 
 import java.io.IOException;
 
-import androthello.model.Board;
-import androthello.model.CellState;
-import androthello.model.CellStateBlack;
-import androthello.model.CellStateEmpty;
-import androthello.model.CellStateWhite;
+import androthello.model.CellColor;
+import androthello.model.CellColorBlack;
+import androthello.model.CellColorEmpty;
+import androthello.model.CellColorWhite;
 import androthello.model.Motor;
 
 
@@ -77,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                                refresh_view();
                                 motor = new Motor(2);
                                 break;
 
@@ -192,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             TableRow r = (TableRow)table.getChildAt(y);
             for (int x = 0; x < TABLE_WIDTH; x++) {
 
-                changeColorFromState((ImageButton)r.getChildAt(x),Motor.GetCellState(y,x));
+                changeColorFromState((ImageButton)r.getChildAt(x),Motor.getCellColor(y, x));
             }
         }
 
@@ -225,10 +217,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void changeColorFromState(ImageButton button,CellState state){
-        if(state == CellStateEmpty.getInstance())   button.getBackground().setColorFilter(0x01000000, PorterDuff.Mode.MULTIPLY);
-        else if(state == CellStateWhite.getInstance()) setButtonColorWhite(button);
-        else if(state == CellStateBlack.getInstance()) setButtonColorBlack(button);
+    private void changeColorFromState(ImageButton button,CellColor state){
+        if(state == CellColorEmpty.getInstance())   button.getBackground().setColorFilter(0x01000000, PorterDuff.Mode.MULTIPLY);
+        else if(state == CellColorWhite.getInstance()) setButtonColorWhite(button);
+        else if(state == CellColorBlack.getInstance()) setButtonColorBlack(button);
     }
 
 
