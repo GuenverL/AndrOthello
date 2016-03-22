@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Strauss on 23/02/2016.
+ * The cell of the game :knows tha board, its color, row and column
  */
 public class Cell {
     private Board board;
@@ -11,6 +12,12 @@ public class Cell {
     private int row;
     private int col;
 
+    /**
+     *Constructor with 3 parameters, set the color on empty by default
+     * @param board the board of the game
+     * @param row the row of the cell
+     * @param col the column of the cell
+     */
     public Cell(Board board, int row, int col){
         this.board = board;
         this.row = row;
@@ -18,21 +25,41 @@ public class Cell {
         this.color = CellColorEmpty.getInstance();
     }
 
-    public Cell(Board board, int row, int col, CellColor state){
+    /**
+     *Constructor with 4 parameters
+     * @param board the board of the game
+     * @param row the row of the cell
+     * @param col the column of the cell
+     * @param color the color of the cell
+     */
+    public Cell(Board board, int row, int col, CellColor color){
         this.board = board;
         this.row = row;
         this.col = col;
-        this.color = state;
+        this.color = color;
     }
 
+    /**
+     * Getter on the color
+     * @return CellColor the color of the cell
+     */
     public CellColor getColor() {
         return this.color;
     }
 
+    /**
+     * Make a move on the cell : change its color
+     * @param state he color to set
+     */
     public void move(CellColor state){
         this.color = state;
     }
 
+    /**
+     * Getter on the neighbor of the cell in a given direction
+     * @param direction the direction
+     * @return Cell the neighbor
+     */
     public Cell neighbor(int direction){
         switch(direction){
             case 1:
