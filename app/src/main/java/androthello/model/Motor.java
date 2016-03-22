@@ -4,6 +4,8 @@ import java.io.*;
 
 /**
  * Created by sunwel on 23/02/2016.
+ * Motor class : contains the board and the players,
+ * knows the number of human players the active player, his color and the color of the winner
  */
 public class Motor {
     private static Board board;
@@ -13,6 +15,10 @@ public class Motor {
     private static CellColor winner;
     private static int humanPlayersNumber;
 
+    /**
+     * Constructor, initialize the board and the players list
+     * @param humanNumber the number of human players in the game
+     */
     public Motor(int humanNumber){
         board = new Board();
         board.boardInitialize();
@@ -32,25 +38,50 @@ public class Motor {
         activePlayerColor = CellColorBlack.getInstance();
     }
 
+    /**
+     * Tells the player to make a move on the cell with the given coordinates
+     * @param row the row of the cell
+     * @param col the column of the cell
+     */
     public void makeMove(int row, int col){
         if(activePlayer.makeMove(board.getCell(row,col)) == 0 )
             endTurn();
     }
 
+    /**
+     * Getter on the score of a player
+     * @param playerID the player
+     * @return int the score
+     */
     public static int getPlayerCount(int playerID){
         return players[playerID-1].getCount(board);
     }
 
+    /**
+     * Getter on the id of the active player
+      * @return int the id
+     */
     public static int getActivePlayerID(){
         return activePlayer.getId();
     }
 
+    /**
+     * Getter on the color of a cell
+     * @param row the row of the cell
+     * @param col the column of the cell
+     * @return CellColor the color of the cell
+     */
     public static CellColor getCellColor(int row, int col){
         return board.getCell(row, col).getColor();
     }
 
+    /**
+     * Manages the end of turn : if the opponent has no move available, skip his turn;
+     * if neither player can play, end the game and reset it.
+     * */
     private void endTurn() {
         if (possibleMove(activePlayerColor.opponentColor())){
+            winner = CellColorEmpty.getInstance();
             playerChange();
         }else{
             if(!possibleMove(activePlayerColor))
@@ -67,10 +98,18 @@ public class Motor {
         }
     }
 
+    /**
+     * Tells if a move is possible on the cell for the active player
+     * @param color the color of the active player
+     * @return boolean true if move possible, else false.
+     */
     private static boolean possibleMove(CellColor color){
         return !board.getLegalCells(color).isEmpty();
     }
 
+    /**
+     * Changes the active player
+     */
     private static void playerChange(){
         if(activePlayer.getId() == 1){
             activePlayer = players[1];
@@ -80,10 +119,17 @@ public class Motor {
         activePlayerColor = activePlayerColor.opponentColor();
     }
 
+    /**
+     * Getter on the winner of the game
+     * @return String the winner
+     */
     public static String getWinner() {
         return winner.toString();
     }
 
+    /**
+     * Resets the game for two human players
+     */
     public void resetGameUser(){
         board.boardInitialize();
         activePlayer = players[0];
@@ -91,6 +137,9 @@ public class Motor {
         players[1] = new PlayerUser(2, CellColorWhite.getInstance(), board);
     }
 
+    /**
+     * reset the game for one human players
+     */
     public void resetGameAI(){
         board.boardInitialize();
         activePlayer = players[0];
@@ -98,10 +147,10 @@ public class Motor {
         players[1] = new PlayerAI(2, CellColorWhite.getInstance(), board);
     }
 
-    public static Boolean isEndedGame(){
-        return (winner != CellColorEmpty.getInstance());
-    }
-
+    /**
+     * Saves the game : create a file if it doesn't exist and write the board as a string on it.
+     * @throws IOException
+     */
     public static void saveGame() throws IOException {
         String fileName = "save.txt";
         PrintWriter writer = new PrintWriter(fileName);
@@ -132,6 +181,11 @@ public class Motor {
         bufferedwriter.close();
     }
 
+    /**
+     * Laods a game : read the save file if it exists and builds the board from a string
+     * @return int 0 if the file exists and is loaded, else false
+     * @throws IOException
+     */
     public static int loadGame() throws IOException {
         String fileName = "save.txt";
         String saveState ;
