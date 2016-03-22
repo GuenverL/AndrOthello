@@ -14,4 +14,12 @@ Letay Benoit => Toute la partie Interface : L'affichage du plateau, des boutons 
     Si le joueur est une IA, un coup est choisi aléatoirement parmis les coup valide possible.
     Quand il n'y a pas de coup possible pour un joueur, son tour est passé; si aucun des 2 joueurs ne peut jouer, la partie se termine et le vainqueur est décidé
     en fonction du nombre de cases possedées par chaque joueur
+    
+    
+## Controller
+Le controller est la classe motor qui est appelé par les différents onclicklistener de la Vue
+
+#Vue
+La vue se charge de l'affichage des différents boutton et de la grille.
+
 
