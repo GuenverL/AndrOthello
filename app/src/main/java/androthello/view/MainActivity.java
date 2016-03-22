@@ -3,6 +3,7 @@ package androthello.view;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -43,10 +44,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        motor = new Motor(2);
+        if(motor == null)
+            motor = new Motor(1);
 
-
-
+        //Disable screen rotation
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
 
 
@@ -218,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void changeColorFromState(ImageButton button,CellColor state){
-        if(state == CellColorEmpty.getInstance())   button.getBackground().setColorFilter(0x01000000, PorterDuff.Mode.MULTIPLY);
+        if(state == CellColorEmpty.getInstance())   button.getBackground().setColorFilter(0x08000000, PorterDuff.Mode.MULTIPLY);
         else if(state == CellColorWhite.getInstance()) setButtonColorWhite(button);
         else if(state == CellColorBlack.getInstance()) setButtonColorBlack(button);
     }
@@ -261,10 +263,16 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         try {
             Motor.saveGame();
-            Toast.makeText(getApplicationContext(),
-                    "  saved game",
-                    Toast.LENGTH_SHORT).show();
-            refresh_view();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onDestroy()
+    {
+        super.onDestroy();
+        try {
+            Motor.saveGame();
         } catch (IOException e) {
             e.printStackTrace();
         }
