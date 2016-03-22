@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        motor = new Motor(2);
+        motor = new Motor(1);
 
 
 
@@ -173,9 +173,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void refresh_view(){
 
-        if(Motor.isEndedGame()){
+        if(!Motor.getWinner().equals("None")){
             Toast.makeText(getApplicationContext(),
-                    "YOU WIN ! FLAWLESS VICTORY ",
+                    Motor.getWinner()+" WIN ! FLAWLESS VICTORY ",
                     Toast.LENGTH_SHORT).show();
         }
 
