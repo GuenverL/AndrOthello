@@ -42,8 +42,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        try {
+            Motor.loadGame();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if(motor == null)
             motor = new Motor(1);
 
@@ -175,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void refresh_view(){
 
-        if(Motor.isEndedGame()){
+        if(!Motor.getWinner().equals("None")){
             Toast.makeText(getApplicationContext(),
                     "YOU WIN ! FLAWLESS VICTORY ",
                     Toast.LENGTH_SHORT).show();
@@ -268,6 +274,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void onStop()
+    {
+        super.onStop();
+        try {
+            Motor.saveGame();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void onDestroy()
     {
         super.onDestroy();
@@ -277,6 +293,22 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public void onStart(){
+        super.onStart();
+        try {
+            Motor.loadGame();
+            Toast.makeText(getApplicationContext(),
+                    "loaded game",
+                    Toast.LENGTH_SHORT).show();
+            refresh_view();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     public void onResume(){
         super.onResume();
