@@ -21,6 +21,9 @@
         android:shrinkColumns="*"
         android:stretchColumns="*"
 
+        android:horizontalSpacing="1dp"
+        android:verticalSpacing="1dp"
+
 
         tools:context="androthello.view.MainActivity"
         android:layout_alignParentBottom="true"

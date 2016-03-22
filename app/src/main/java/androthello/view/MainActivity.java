@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         try {
@@ -53,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         if(motor == null)
             motor = new Motor(1);
 
-        //Disable screen rotation
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        //Disable screen rotation and only allow portrait
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
 
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //New game button
         Button b_newgame = (Button) (findViewById(R.id.button_newgame ));
         b_newgame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //Display a Dialogue Interface to assure that it isn't a missclick
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
                                 motor = new Motor(2);
@@ -95,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //New AI game button
         Button b_newgameAI = (Button) (findViewById(R.id.button_newgameAI ));
         b_newgameAI.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
+                            //Display a Dialogue Interface to assure that it isn't a missclick
                             case DialogInterface.BUTTON_POSITIVE:
                                 motor = new Motor(1);
                                 break;
@@ -129,9 +135,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+        //We create a tableLayout and each button
         table = (TableLayout) findViewById(R.id.grille_main);
-        //table.setBackground(ContextCompat.getDrawable(this,R.drawable.velvet_green_background));
         for (int y = 0; y < TABLE_HEIGHT; y++) {
             final int row = y;
             TableRow r = new TableRow(this);
@@ -139,8 +144,10 @@ public class MainActivity extends AppCompatActivity {
             for (int x = 0; x < TABLE_WIDTH; x++) {
                 final int col = x;
 
+                //ImageButton cause we nee the base size
                 ImageButton b = new ImageButton(this){
                     @Override
+                    //We set the width to be always equals to the height to keep our button
                     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
                         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
                         this.setMeasuredDimension(parentWidth, parentWidth);
@@ -148,10 +155,10 @@ public class MainActivity extends AppCompatActivity {
                 };
 
 
-
+                //set the form of the button to a round
                 Drawable roundDrawable = getResources().getDrawable(R.drawable.button_round);
 
-
+                //Manage with older version
                 if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                     b.setBackgroundDrawable(roundDrawable);
                 } else {
@@ -161,11 +168,9 @@ public class MainActivity extends AppCompatActivity {
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        /*Toast.makeText(getApplicationContext(),
-                                "You clicked (" + row + "," + col + ")",
-                                Toast.LENGTH_SHORT).show();*/
-
+                        //The user play on this case
                         motor.makeMove(row, col);
+                        //We refresh the view
                         refresh_view();
                     }
                 });
@@ -179,11 +184,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * resfrsh_view refresh the entire view (score button and grid)
+     */
     private void refresh_view(){
-
+        //End of the game check
         if(!Motor.getWinner().equals("None")){
             Toast.makeText(getApplicationContext(),
-                    "YOU WIN ! FLAWLESS VICTORY ",
+                    //Display a message to the winner
+                    Motor.getWinner()+" win with a score of "+Motor.getPlayerCount(Motor.getActivePlayerID()),
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -191,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         for (int y = 0; y < TABLE_HEIGHT; y++) {
             TableRow r = (TableRow)table.getChildAt(y);
             for (int x = 0; x < TABLE_WIDTH; x++) {
-
+                //Change the color of a button
                 changeColorFromState((ImageButton)r.getChildAt(x),Motor.getCellColor(y, x));
             }
         }
@@ -224,9 +233,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Change the color of a button
+     * @param button the button to modify
+     * @param state the color of his cell
+     */
     private void changeColorFromState(ImageButton button,CellColor state){
-        if(state == CellColorEmpty.getInstance())   button.getBackground().setColorFilter(0x08000000, PorterDuff.Mode.MULTIPLY);
+        if(state == CellColorEmpty.getInstance())   button.getBackground().setColorFilter(0x10FFFFFF, PorterDuff.Mode.MULTIPLY);
         else if(state == CellColorWhite.getInstance()) setButtonColorWhite(button);
         else if(state == CellColorBlack.getInstance()) setButtonColorBlack(button);
     }
@@ -236,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -266,36 +280,39 @@ public class MainActivity extends AppCompatActivity {
 
     public void onPause()
     {
-        super.onPause();
+
         try {
             Motor.saveGame();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        super.onPause();
     }
 
     public void onStop()
     {
-        super.onStop();
+
         try {
             Motor.saveGame();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        super.onStop();
     }
 
     public void onDestroy()
     {
-        super.onDestroy();
+
         try {
             Motor.saveGame();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        super.onDestroy();
     }
 
     public void onStart(){
-        super.onStart();
+
         try {
             Motor.loadGame();
             Toast.makeText(getApplicationContext(),
@@ -305,13 +322,25 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        super.onStart();
+    }
+
+    @Override
+    public void onBackPressed() {
+        try {
+            Motor.saveGame();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        super.onBackPressed();
     }
 
 
 
 
     public void onResume(){
-        super.onResume();
+
         try {
             Motor.loadGame();
             Toast.makeText(getApplicationContext(),
@@ -321,6 +350,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        super.onResume();
     }
 
     private void setButtonColorWhite(ImageButton button){
