@@ -20,12 +20,12 @@ public class Motor {
         winner = CellStateEmpty.getInstance();
 
         players = new PlayerUser[2];
-        players[0] = new PlayerUser(1, CellStateWhite.getInstance(), board);
+        players[0] = new PlayerUser(1, CellStateBlack.getInstance(), board);
 
         if(humanPlayersNumber == 1){
             players[1] = new PlayerAI(2, CellStateBlack.getInstance(), board);
         }else if(humanPlayersNumber == 2){
-            players[1] = new PlayerUser(2, CellStateBlack.getInstance(), board);
+            players[1] = new PlayerUser(2, CellStateWhite.getInstance(), board);
         }
 
         activePlayer = players[0];
@@ -76,8 +76,12 @@ public class Motor {
         activePlayerColor = activePlayerColor.opponentColor();
     }
 
-    public String isEndedGame() {
+    public static String getWinner() {
         return winner.toString();
+    }
+
+    public static Boolean isEndedGame(){
+        return (winner != CellStateEmpty.getInstance());
     }
 
     public static void resetGame(){

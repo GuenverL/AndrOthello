@@ -3,7 +3,10 @@ package androthello.view;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
@@ -41,11 +45,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        motor = new Motor(1);
+        motor = new Motor(2);
+
+
+
+
 
 
 
@@ -66,22 +75,22 @@ public class MainActivity extends AppCompatActivity {
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                                Motor.resetGame();
-                                refresh_view();
+                                motor = new Motor(2);
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
                                 //No button clicked
                                 break;
                         }
+                        refresh_view();
                     }
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
+                builder.setMessage("Êtes-vous sûr ?").setPositiveButton("Oui", dialogClickListener)
+                        .setNegativeButton("Non", dialogClickListener).show();
             }
         });
 
@@ -89,10 +98,25 @@ public class MainActivity extends AppCompatActivity {
         b_newgameAI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),
-                        " You launched a new IA game",
-                        Toast.LENGTH_SHORT).show();
-                refresh_view();
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                motor = new Motor(1);
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                        refresh_view();
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setMessage("Êtes-vous sûr ?").setPositiveButton("Oui", dialogClickListener)
+                        .setNegativeButton("Non", dialogClickListener).show();
             }
 
         });
@@ -103,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        Board board = new Board(); //Main board which carry all the cell's states
 
 
         table = (TableLayout) findViewById(R.id.grille_main);
@@ -122,15 +145,17 @@ public class MainActivity extends AppCompatActivity {
                         this.setMeasuredDimension(parentWidth, parentWidth);
                     }
                 };
-                b.setAdjustViewBounds(true);
-                b.setScaleType(ImageView.ScaleType.FIT_XY );
-                if((x == 3 && y == 3) || (x == 4 && y == 4))
-                    b.getBackground().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.OVERLAY);
-                else if((x == 4 && y == 3) || (x == 3 && y == 4))
-                    b.getBackground().setColorFilter(0x00000000, PorterDuff.Mode.OVERLAY);
-                else b.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
 
 
+
+                Drawable roundDrawable = getResources().getDrawable(R.drawable.button_round);
+
+
+                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    b.setBackgroundDrawable(roundDrawable);
+                } else {
+                    b.setBackground(roundDrawable);
+                }
 
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -145,8 +170,9 @@ public class MainActivity extends AppCompatActivity {
                 });
                 r.addView(b);
             }
-        }
 
+        }
+        refresh_view();
 
 
 
@@ -154,11 +180,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void refresh_view(){
 
-        /*if(Motor.isEndedGame()){
+        if(Motor.isEndedGame()){
             Toast.makeText(getApplicationContext(),
                     "YOU WIN ! FLAWLESS VICTORY ",
                     Toast.LENGTH_SHORT).show();
-        }*/
+        }
 
         //Refresh of the grid
         for (int y = 0; y < TABLE_HEIGHT; y++) {
@@ -166,35 +192,42 @@ public class MainActivity extends AppCompatActivity {
             for (int x = 0; x < TABLE_WIDTH; x++) {
 
                 changeColorFromState((ImageButton)r.getChildAt(x),Motor.GetCellState(y,x));
-                // r.getChildAt(x).getBackground().setColorFilter(0x00000000, PorterDuff.Mode.OVERLAY);
             }
         }
 
-        //Refresh the text of the counters buttons
+
+
+        //Refres5h the text of the counters buttons
         Button button_player_one = (Button)findViewById(R.id.button_player_one);
         button_player_one.setText(getResources().getString(R.string.player_one) + " : " + Motor.getPlayerCount(1)) ;
+        button_player_one.getBackground().setColorFilter(0xFF000000, PorterDuff.Mode.SRC_ATOP);
+        button_player_one.setTextColor(0xFFFFFFFF);
+
         Button button_player_two = (Button)findViewById(R.id.button_player_two);
         button_player_two.setText(getResources().getString(R.string.player_two) + " : " + Motor.getPlayerCount(2)) ;
+        button_player_two.getBackground().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_ATOP);
+        button_player_two.setTextColor(0xFF000000);
+
 
         button_player_one.setClickable(false);
         button_player_two.setClickable(false);
 
         //Put the active player's button
         if(Motor.getActivePlayerID() == 1){
-            button_player_one.setEnabled(true);
-            button_player_two.setEnabled(false);
+            button_player_one.setAlpha(1);
+            button_player_two.setAlpha((float)0.3);
         }
         else{
-            button_player_one.setEnabled(false);
-            button_player_two.setEnabled(true);
+            button_player_one.setAlpha((float) 0.3);
+            button_player_two.setAlpha(1);
         }
     }
 
 
     private void changeColorFromState(ImageButton button,CellState state){
-        if(state == CellStateEmpty.getInstance())   button.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
-        else if(state == CellStateWhite.getInstance()) button.getBackground().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.OVERLAY);
-        else if(state == CellStateBlack.getInstance()) button.getBackground().setColorFilter(0x00000000, PorterDuff.Mode.OVERLAY);
+        if(state == CellStateEmpty.getInstance())   button.getBackground().setColorFilter(0x01000000, PorterDuff.Mode.MULTIPLY);
+        else if(state == CellStateWhite.getInstance()) setButtonColorWhite(button);
+        else if(state == CellStateBlack.getInstance()) setButtonColorBlack(button);
     }
 
 
@@ -256,6 +289,15 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    private void setButtonColorWhite(ImageButton button){
+        button.getBackground().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_ATOP);
+    }
+
+    private void setButtonColorBlack(ImageButton button){
+        button.getBackground().setColorFilter(0xFF000000, PorterDuff.Mode.SRC_ATOP);
+    }
+
 
 
 }
