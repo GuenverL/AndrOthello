@@ -20,10 +20,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="androthello.view.PlayActivity"
-            android:label="@string/title_activity_play"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name="androthello.view.SettingsActivity"
             android:label="@string/title_activity_settings"></activity>
     </application>
